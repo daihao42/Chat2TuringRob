@@ -286,7 +286,7 @@ function sendData() {
     if($(".chat-window-message").val() == ""){return;}
 	$.ajax({
        				type:"post",
-       				url:"test",
+       				url:"say",
        				timeout : 10000,
        				data:{	say:$(".chat-window-message").val()
        				},

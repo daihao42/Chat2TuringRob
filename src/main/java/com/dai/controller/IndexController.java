@@ -1,9 +1,12 @@
 package com.dai.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Random;
+import java.util.Iterator;
+import java.util.UUID;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -12,6 +15,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.dai.pojo.DTalk;
 import com.dai.serviceIm.SessionService;
@@ -29,8 +34,8 @@ public class IndexController {
 		return "redirect:login";
 	}
 
-	@RequestMapping("test")
-	public void Test(@RequestParam(value="say") String say,HttpServletResponse response){
+	@RequestMapping("/say")
+	public void Say(@RequestParam(value="say") String say,HttpServletResponse response){
 		DTalk d = new DTalk();
 		String res = null;
 		//System.out.print(d.getAnswer(say));
@@ -54,5 +59,45 @@ public class IndexController {
 		} catch(IOException e){
 			e.printStackTrace();
 		}
+	}
+	
+	
+	/**
+	 * 上传界面
+	 */
+	@RequestMapping("/test")
+	public String test(){
+		return "upload";
+	}
+	
+	
+	/**
+	 * 上传文件
+	 */
+	@RequestMapping("/upload")
+	public void Upload(HttpServletRequest request,     
+            HttpServletResponse response){
+        MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;  
+        //取得request中的所有文件名  
+        Iterator<String> iter = multiRequest.getFileNames();
+        while(iter.hasNext()){
+        	MultipartFile file = multiRequest.getFile(iter.next());
+        	if(file != null){  
+                //取得当前上传文件的文件名称  
+                String myFileName = file.getOriginalFilename();  
+                String path = request.getSession().getServletContext().getRealPath("/")+"/include/img/";
+                path = path + UUID.randomUUID() + "." + myFileName.split("\\.")[1];  
+                File localFile = new File(path);  
+                try {
+					file.transferTo(localFile);
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+        	}
+        }
 	}
 }
