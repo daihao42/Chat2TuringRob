@@ -5,6 +5,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Service;
 
 import com.dai.mapper.UserMapper;
+import com.dai.pojo.SpringContextsUtil;
 import com.dai.pojo.StatusCode;
 import com.dai.pojo.User;
 import com.dai.service.AuthInterface;
@@ -14,8 +15,7 @@ public class AuthService implements AuthInterface{
 	@Override
 	public int Login(String email, String password) {
 		// TODO Auto-generated method stub
-		ApplicationContext ctx=new ClassPathXmlApplicationContext("spring-mybatis.xml");
-		UserMapper user = (UserMapper)ctx.getBean("userMapper");
+		UserMapper user = (UserMapper)SpringContextsUtil.getBean("userMapper");
 		User my = null;
 		try {
 			my = user.selectByEmail(email);
@@ -42,8 +42,7 @@ public class AuthService implements AuthInterface{
 	@Override
 	public int Register(String email, String password, String name) {
 		// TODO Auto-generated method stub
-		ApplicationContext ctx=new ClassPathXmlApplicationContext("spring-mybatis.xml");
-		UserMapper userMapper = (UserMapper)ctx.getBean("userMapper");
+		UserMapper userMapper = (UserMapper)SpringContextsUtil.getBean("userMapper");
 		User my = null;
 		try {
 			my = userMapper.selectByEmail(email);

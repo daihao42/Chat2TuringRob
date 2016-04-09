@@ -19,15 +19,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.dai.pojo.DTalk;
+import com.dai.pojo.SpringContextsUtil;
+import com.dai.pojo.User;
 import com.dai.serviceIm.SessionService;
+import com.dai.serviceIm.UploadImgService;
 
 @Controller
 public class IndexController {
 	
 	@RequestMapping("/")
 	public String Index(HttpSession session){
-		ApplicationContext ctx=new ClassPathXmlApplicationContext("spring-service.xml");
-		SessionService sess = (SessionService)ctx.getBean("sessionService");
+ 		SessionService sess = (SessionService)SpringContextsUtil.getBean("sessionService");
 		if(sess.isLogin(session)){
 			return "index";
 		}
@@ -67,6 +69,7 @@ public class IndexController {
 	 */
 	@RequestMapping("/test")
 	public String test(){
+		
 		return "upload";
 	}
 	
@@ -76,7 +79,9 @@ public class IndexController {
 	 */
 	@RequestMapping("/upload")
 	public void Upload(HttpServletRequest request,     
-            HttpServletResponse response){
+            HttpServletResponse response,HttpSession session){
+		UploadImgService uploadImgService = (UploadImgService)SpringContextsUtil.getBean("uploadImgService");
+		
         MultipartHttpServletRequest multiRequest = (MultipartHttpServletRequest)request;  
         //取得request中的所有文件名  
         Iterator<String> iter = multiRequest.getFileNames();
@@ -86,10 +91,16 @@ public class IndexController {
                 //取得当前上传文件的文件名称  
                 String myFileName = file.getOriginalFilename();  
                 String path = request.getSession().getServletContext().getRealPath("/")+"/include/img/";
-                path = path + UUID.randomUUID() + "." + myFileName.split("\\.")[1];  
-                File localFile = new File(path);  
+                String abspath = UUID.randomUUID() + "." + myFileName.split("\\.")[1];  
+                File localFile = new File(path+abspath);  
                 try {
 					file.transferTo(localFile);
+					User currentUser = (User)session.getAttribute("user");
+					uploadImgService.addUploadImg(currentUser.getEmail(), abspath);
+
+					//Test
+					System.out.print(uploadImgService.getAllImg(currentUser.getEmail()).toString());
+
 				} catch (IllegalStateException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

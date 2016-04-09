@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
+import com.dai.pojo.SpringContextsUtil;
 import com.dai.pojo.StatusCode;
 import com.dai.pojo.User;
 import com.dai.serviceIm.AuthService;
@@ -28,9 +29,8 @@ public class AuthController {
 	public void Auth(@RequestParam(value="email") String email,
             @RequestParam(value="password")String password,PrintWriter pw,HttpSession session){
 		//使用ajax验证登录
-		ApplicationContext ctx=new ClassPathXmlApplicationContext("spring-service.xml");
-		AuthService auth = (AuthService)ctx.getBean("authService");
-		SessionService sess = (SessionService)ctx.getBean("sessionService");
+		AuthService auth = (AuthService)SpringContextsUtil.getBean("authService");
+		SessionService sess = (SessionService)SpringContextsUtil.getBean("sessionService");
 		int res = auth.Login(email, password);
 		switch(res){
 			case StatusCode.GetYeah: 
@@ -49,8 +49,7 @@ public class AuthController {
 	@RequestMapping("logout")
 	public String LoginOut(HttpSession session){
 		//销毁session
-		ApplicationContext ctx=new ClassPathXmlApplicationContext("spring-service.xml");
-		SessionService sess = (SessionService)ctx.getBean("sessionService");
+		SessionService sess = (SessionService)SpringContextsUtil.getBean("sessionService");
 		sess.deleteSession(session);
 		return "redirect:login";
 	}
@@ -65,9 +64,8 @@ public class AuthController {
             @RequestParam(value="password")String password,
             @RequestParam(value="name")String name,
             PrintWriter pw,HttpSession session){
-		ApplicationContext ctx=new ClassPathXmlApplicationContext("spring-service.xml");
-		AuthService auth = (AuthService)ctx.getBean("authService");
-		SessionService sess = (SessionService)ctx.getBean("sessionService");
+		AuthService auth = (AuthService)SpringContextsUtil.getBean("authService");
+		SessionService sess = (SessionService)SpringContextsUtil.getBean("sessionService");
 		int res = auth.Register(email, password, name);
 		switch(res){
 			case StatusCode.GetYeah:

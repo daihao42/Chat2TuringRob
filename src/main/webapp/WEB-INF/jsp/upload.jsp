@@ -19,10 +19,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<!--
 	<link rel="stylesheet" type="text/css" href="styles.css">
 	-->
+	<script type="text/javascript" src="./include/js/dropzone.min.js"></script>
+	<link rel="stylesheet" href="./include/css/dropzone.min.css">
+	<div id="dropz"></div>
+	<script>
+    	Dropzone.options.dropz = {
+    	maxFilesize: 5, // MB
+    	acceptedFiles: ".jpg,.gif,.png",
+    	maxFiles: 1,
+    	}
+	</script>
 
   </head>
   
   <body>
+  
+  <form action="upload" method="post"
+                enctype="multipart/form-data" class="dropzone"
+                id="dropz">
+            </form>
+            
     <form action="upload" method="post" enctype="multipart/form-data">  
 <input type="file" name="file" /> <input type="submit" value="Submit" /></form>  
 </body>  

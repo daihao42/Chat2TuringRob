@@ -11,4 +11,8 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">  
 <!-- 自动扫描该包 -->  
     <context:component-scan base-package="com.dai.serviceIm" /> 
+    
+    
+    <!-- SpringContextsUtil类的声明 -->
+    <bean id="springContextsUtil" class="com.dai.pojo.SpringContextsUtil" lazy-init="false"></bean>
 </beans>

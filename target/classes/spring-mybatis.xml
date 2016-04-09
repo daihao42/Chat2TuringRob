@@ -49,4 +49,7 @@
         <property name="dataSource" ref="dataSource" />  
     </bean>  
     
+	<!-- SpringContextsUtil类的声明 -->
+    <bean id="springContextsUtil" class="com.dai.pojo.SpringContextsUtil" lazy-init="false"></bean>
+    
 </beans> 
